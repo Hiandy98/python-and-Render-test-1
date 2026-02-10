@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>JS + Python 雲端串接測試</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding-top: 50px; }
+        #app { border: 2px dashed #ccc; padding: 20px; border-radius: 8px; min-width: 300px; text-align: center; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .data-card { background: #f4f4f4; margin-top: 10px; padding: 10px; border-radius: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>前端渲染掛載點</h1>
+    
+    <div id="app">
+        <p>等待操作...</p>
+    </div>
+
+    <br>
+    <button id="fetch-btn">抓取雲端資料</button>
+
+    <script>
+        // 🚀 重點：換成你圖片中那個網址 (結尾不要斜線)
+        const API_BASE_URL = "https://python-and-render-test-1.onrender.com/";
+
+        const appPoint = document.getElementById('app');
+        const btn = document.getElementById('fetch-btn');
+
+        btn.onclick = async () => {
+            // 1. 顯示讀取中狀態
+            appPoint.innerHTML = "<p>正在連線至 Render 伺服器...</p>";
+
+            try {
+                // 2. 向 Python 後端發送請求
+                const response = await fetch(`${API_BASE_URL}/api/hello`);
+                const result = await response.json();
+                console.log(result);
+
+                // 3. 執行渲染掛載 (把後端資料塞進 HTML)
+                appPoint.innerHTML = `
+                    <div class="data-card">
+                        後端回傳訊息：<br>
+                        <span style="color: green;">${result.data}</span>
+                    </div>
+                    <p>最後更新時間：${new Date().toLocaleTimeString()}</p>
+                `;
+            } catch (error) {
+                appPoint.innerHTML = `<p style="color: red;">連線失敗：${error.message}</p>`;
+            }
+        };
+    </script>
+</body>
+</html>
