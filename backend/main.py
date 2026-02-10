@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -19,3 +20,10 @@ def read_root():
 @app.get("/api/hello")
 def say_hello():
     return {"data": "Hello from Python!"}
+
+class UserInput(BaseModel):
+    name: str
+
+@app.post("/api/greet")
+def greet_user(user: UserInput):
+    return {"data": f"你好 {user.name}！這是來自 Python 的雲端問候 🐍"}
