@@ -9,6 +9,8 @@
         button { background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
         button:hover { background-color: #0056b3; }
         .data-card { background: #f4f4f4; margin-top: 10px; padding: 10px; border-radius: 5px; font-weight: bold; }
+        #name-input {border: 2px dashed #ccc; padding: 20px; border-radius: 8px; min-width: 300px; text-align: center; margin-bottom: 10px; }
+        #message-box {border: 2px dashed #ccc; padding: 20px; border-radius: 8px; min-width: 300px; text-align: center; display: none; margin: 10px; }
     </style>
 </head>
 <body>
@@ -21,6 +23,15 @@
 
     <br>
     <button id="fetch-btn">抓取雲端資料</button>
+
+    <hr>
+    <input type="text" id="name-input" placeholder="輸入你的名字">
+    <button id="greet-btn">傳送給 Python</button>
+    
+    <div id="message-box">
+        <p id="greet-msg" style="color: rgb(0, 170, 255);"></p>
+    </div>
+    
 
     <script>
         const API_BASE_URL = "https://python-and-render-test-1.onrender.com";
@@ -50,6 +61,23 @@
                 appPoint.innerHTML = `<p style="color: red;">連線失敗：${error.message}</p>`;
             }
         };
+
+        // 這裡延用你原本的 API_BASE_URL
+        document.getElementById('greet-btn').onclick = async () => {
+            const nameValue = document.getElementById('name-input').value;
+            if (!nameValue) return alert("請輸入名字！");
+
+            const res = await fetch(`${API_BASE_URL}/api/greet`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: nameValue }) // 必須與 Python 的 UserInput 格式一致
+            });
+            
+            const result = await res.json();
+            document.getElementById('message-box').style.display = 'block';
+            document.getElementById('greet-msg').innerText = result.data;
+        };
     </script>
+
 </body>
 </html>
