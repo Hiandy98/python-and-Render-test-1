@@ -31,7 +31,14 @@ class UserInput(BaseModel):
     name: str
     content: str
 
-# --- 4. 初始化 FastAPI ---
+# --- 4.嘗試連接資料庫 ---
+try:
+    engine.connect()
+    print("✅ 資料庫連線成功！")
+except Exception as e:
+    print(f"❌ 資料庫連線失敗，錯誤訊息：{e}")
+
+# --- 5. 初始化 FastAPI ---
 # 修正：app 只能定義一次！
 app = FastAPI()
 
